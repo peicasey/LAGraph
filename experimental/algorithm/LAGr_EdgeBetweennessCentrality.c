@@ -323,10 +323,12 @@ int LAGr_EdgeBetweennessCentrality
             // Update = I × A × J 
             // Compute edge updates based on current level weights
             //----------------------------------------------------------------------
-
+            
+            printf("[FLAG 2] Fd1A = I * A:\n") ;
             GRB_TRY(GrB_mxm(Fd1A, NULL, NULL, LAGraph_plus_first_fp64,
                 I_matrix, A, NULL)) ;
 
+            printf("[FLAG 1] Fd1A = Fd1A * J:\n") ;
             GRB_TRY(GrB_mxm(Update, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64,
                 Fd1A, J_matrix, NULL)) ;
 

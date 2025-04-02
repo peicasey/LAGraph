@@ -45,6 +45,15 @@ int main (int argc, char **argv)
     // start GraphBLAS and LAGraph
     LAGRAPH_TRY (LAGraph_Init (msg)) ;
 
+    // Open a file for writing (this will overwrite the file if it already exists)
+    FILE *file = freopen("output.txt", "w", stdout);
+    
+    // Check if the file was opened successfully
+    if (file == NULL) {
+        perror("Error opening file");
+        return 1;
+    }
+
     //--------------------------------------------------------------------------
     // read in the graph via a Matrix Market file from stdin
     //--------------------------------------------------------------------------
@@ -81,14 +90,14 @@ int main (int argc, char **argv)
     // compute edge betweenness centrality
     //--------------------------------------------------------------------------
 
-    // LG_SET_BURBLE (true) ;
+    LG_SET_BURBLE (true) ;
 
     t = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LAGr_EdgeBetweennessCentrality (&centrality, G, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LAGr_EdgeBetweennessCentrality: %g sec\n", t) ;
 
-    // LG_SET_BURBLE (false) ;
+    LG_SET_BURBLE (false) ;
 
     //--------------------------------------------------------------------------
     // check the results using LG_check_edgeBetweennessCentrality
@@ -115,6 +124,8 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
     // free everything and finish
     //--------------------------------------------------------------------------
+
+    fclose(file);
 
     GrB_free (&centrality) ;
     GrB_free (&reference_centrality) ;
