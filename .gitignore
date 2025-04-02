@@ -42,6 +42,7 @@ cmake-build-debug*
 CMakeFiles*
 *~
 output.txt
+output_times.txt
 
 */build/*
 **/.venv/*
