@@ -3,6 +3,7 @@ import re
 def parse_large_file(input_file, output_file):
     I_total = 0.0
     J_total = 0.0
+    Assign_total = 0.0
     time_ttl_exact = None
     time_ttl_c = None
 
@@ -29,6 +30,14 @@ def parse_large_file(input_file, output_file):
                 if match:
                     J_total += float(match.group(1))
 
+        # Look for FLAG 3
+        elif "[FLAG 3] centrality<A> += U:" in line:
+            # Look 2 lines below for the time in seconds
+            if i + 2 < len(lines):
+                match = re.search(r"([\d\.e\-]+) sec", lines[i+2])
+                if match:
+                    Assign_total += float(match.group(1))
+
         # Look for LAGr_EdgeBetweennessCentrality time
         elif "Time for LAGr_EdgeBetweennessCentrality" in line:
             match = re.search(r"([\d\.e\-]+) sec", line)
@@ -44,6 +53,7 @@ def parse_large_file(input_file, output_file):
     # Output to console with maximum precision
     print(f"I_total: {I_total:.16f}")
     print(f"J_total: {J_total:.16f}")
+    print(f"Assign_total: {Assign_total:.16f}")
     if time_ttl_exact is not None:
         print(f"time_ttl_exact: {time_ttl_exact:.16f}")
     if time_ttl_c is not None:
@@ -53,6 +63,7 @@ def parse_large_file(input_file, output_file):
     with open(output_file, 'w') as out_file:
         out_file.write(f"I_total: {I_total:.16f}\n")
         out_file.write(f"J_total: {J_total:.16f}\n")
+        out_file.write(f"Assign_total: {Assign_total:.16f}\n")
         if time_ttl_exact is not None:
             out_file.write(f"time_ttl_exact: {time_ttl_exact:.16f}\n")
         if time_ttl_c is not None:
